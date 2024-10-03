@@ -86,10 +86,19 @@
         }
     };
 
+    // Función para convertir formato de fecha
+    function formatDateToDDMMYYYY(fecha) {
+        const dateParts = fecha.split("-");
+        const year = dateParts[0];
+        const month = dateParts[1];
+        const day = dateParts[2];
+        return `${day}/${month}/${year}`; // Convertir a dd/MM/yyyy
+    }
+
     // Función para generar el código QR
     function generarQR() {
         const comercio = document.getElementById('comercio').value;
-        const fechaSorteo = document.getElementById('fechaSorteo').value;
+        const fechaSorteo = formatDateToDDMMYYYY(document.getElementById('fechaSorteo').value);
 
         // URL base
         const baseUrl = 'https://came-sl.github.io/sorteo/form.html';
