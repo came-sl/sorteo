@@ -63,7 +63,7 @@
 <body>
 
 <div class="container">
-    <h1 id="sorteoTitulo">Sorteo</h1>
+    <h1 id="sorteoTitulo">Sorteo CAME</h1>
     <div>
         <div id="comercio" class="readonly"></div>
         <div id="fecha" class="readonly"></div>
@@ -108,7 +108,7 @@
             return;
         }
 
-        const mensaje = `Subject: ${params.sorteo || "Sorteo"}\nNombre: ${nombre}\nDNI: ${dni}\nComercio: ${params.comercio}\nFecha: ${params.fecha}`;
+        const mensaje = `Subject: ${params.sorteo || "Sorteo"}\nComercio: ${params.comercio}\nFecha: ${params.fechaSorteo}\nNombre: ${nombre}\nDNI: ${dni}`;
         const numeroWhatsapp = '5492664158519';  // Reemplaza con el número de WhatsApp
         const urlWhatsApp = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensaje)}`;
 
