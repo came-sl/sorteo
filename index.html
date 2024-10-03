@@ -50,7 +50,7 @@
     <h2>Generar QR para Formulario de Sorteo CAME</h2>
     <form id="qrForm">
         <label for="comercio">Comercio:</label>
-        <input type="text" id="comercio" name="comercio" readonly> <!-- Campo de solo lectura -->
+        <input type="text" id="comercio" name="comercio" required> <!-- Campo de solo lectura -->
 
         <label for="fechaSorteo">Fecha del evento:</label>
         <input type="date" id="fechaSorteo" name="fechaSorteo" required>
@@ -81,8 +81,8 @@
     // Prellenar el campo pelotero con el valor del query param
     window.onload = function() {
         const params = getQueryParams();
-        if (params.pelotero) {
-            document.getElementById('pelotero').value = params.pelotero; // Asignar valor al campo pelotero
+        if (params.comercio) {
+            document.getElementById('comercio').value = params.comercio; // Asignar valor al campo comercio
         }
     };
 
