@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Sorteo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .readonly {
+            background-color: #e9e9e9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="sorteoTitulo">Sorteo</h1>
+    <div>
+        <div id="comercio" class="readonly"></div>
+        <div id="fecha" class="readonly"></div>
+    </div>
+    <form id="sorteoForm">
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        <input type="text" id="dni" name="dni" placeholder="Últimos 3 dígitos de DNI" maxlength="3" required>
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+
+<script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const params = {};
+        window.location.search.substring(1).split("&").forEach(function (pair) {
+            const [key, value] = pair.split("=");
+            if (key && value) {
+                params[decodeURIComponent(key)] = decodeURIComponent(value.replace(/\+/g, " "));
+            }
+        });
+        return params;
+    }
+
+    // Obtener los parámetros de la URL
+    const params = getQueryParams();
+
+    // Asignar valores de query param a los elementos
+    document.getElementById('sorteoTitulo').textContent = params.sorteo || "Sorteo";
+    document.getElementById('comercio').textContent = `Comercio: ${params.comercio || "No especificado"}`;
+    document.getElementById('fecha').textContent = `Fecha: ${params.fecha || "No especificada"}`;
+
+    // Manejar el envío del formulario
+    document.getElementById('sorteoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const nombre = document.getElementById('nombre').value;
+        const dni = document.getElementById('dni').value;
+
+        if (dni.length !== 3 || isNaN(dni)) {
+            alert("Por favor, ingresa los últimos 3 dígitos válidos del DNI.");
+            return;
+        }
+
+        const mensaje = `Subject: ${params.sorteo || "Sorteo"}\nNombre: ${nombre}\nDNI: ${dni}\nComercio: ${params.comercio}\nFecha: ${params.fecha}`;
+        const numeroWhatsapp = '5492664158519';  // Reemplaza con el número de WhatsApp
+        const urlWhatsApp = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensaje)}`;
+
+        window.open(urlWhatsApp, '_blank');
+    });
+</script>
+
+</body>
+</html>
