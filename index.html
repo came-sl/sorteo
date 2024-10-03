@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        img {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Generar QR para Formulario de Sorteo CAME</h2>
+    <form id="qrForm">
+        <label for="comercio">Comercio:</label>
+        <input type="text" id="comercio" name="comercio" readonly> <!-- Campo de solo lectura -->
+
+        <label for="fechaSorteo">Fecha del evento:</label>
+        <input type="date" id="fechaSorteo" name="fechaSorteo" required>
+
+        <button type="button" onclick="generarQR()">Generar QR</button>
+    </form>
+
+    <div id="qrContainer">
+        <img id="qrCode" src="" alt="QR Code" style="display:none;">
+        <div id="generatedUrl"></div> <!-- Sección para mostrar la URL generada -->
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const params = {};
+        window.location.search.substring(1).split("&").forEach(function (pair) {
+            const [key, value] = pair.split("=");
+            if (key && value) {
+                params[decodeURIComponent(key)] = decodeURIComponent(value.replace(/\+/g, " "));
+            }
+        });
+        return params;
+    }
+
+    // Prellenar el campo pelotero con el valor del query param
+    window.onload = function() {
+        const params = getQueryParams();
+        if (params.pelotero) {
+            document.getElementById('pelotero').value = params.pelotero; // Asignar valor al campo pelotero
+        }
+    };
+
+    // Función para generar el código QR
+    function generarQR() {
+        const comercio = document.getElementById('comercio').value;
+        const fechaSorteo = document.getElementById('fechaSorteo').value;
+
+        // URL base
+        const baseUrl = 'https://came-sl.github.io/sorteo/form.html';
+
+        // Generar la URL con parámetros
+        const url = `${baseUrl}?comercio=${encodeURIComponent(comercio)}&fechaSorteo=${encodeURIComponent(fechaSorteo)}}`;
+
+        // Mostrar la URL generada en la página
+        const urlContainer = document.getElementById('generatedUrl');
+        urlContainer.textContent = `URL: ${url}`;
+        
+        // Generar el código QR
+        const qrContainer = document.getElementById('qrContainer');
+        const qrCodeImg = document.getElementById('qrCode');
+
+        QRCode.toDataURL(url, { width: 300 }, function (err, url) {
+            if (err) throw err;
+            qrCodeImg.src = url;
+            qrCodeImg.style.display = 'block';
+        });
+    }
+</script>
+
+</body>
+</html>
