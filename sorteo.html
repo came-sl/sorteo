@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteo CAME</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .readonly {
+            background-color: #e9e9e9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+        input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #mensaje {
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sorteo CAME</h1>
+    <div id="comercio" class="readonly"></div>
+    <div id="fecha" class="readonly"></div>
+    
+    <form id="sorteoForm">
+        <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+        <input type="text" id="dni" name="dni" placeholder="Últimos 3 dígitos de DNI" maxlength="3" required>
+        <input type="tel" id="celular" name="celular" placeholder="Número de celular" required>
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <p id="mensaje"></p>
+</div>
+
+<script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const params = {};
+        window.location.search.substring(1).split("&").forEach(function (pair) {
+            const [key, value] = pair.split("=");
+            if (key && value) {
+                params[decodeURIComponent(key)] = decodeURIComponent(value.replace(/\+/g, " "));
+            }
+        });
+        return params;
+    }
+
+    // Obtener los parámetros de la URL y asignarlos a los elementos
+    const params = getQueryParams();
+    document.getElementById('comercio').textContent = `Comercio: ${params.comercio || "No especificado"}`;
+    document.getElementById('fecha').textContent = `Fecha: ${params.fecha || "No especificada"}`;
+
+    // Manejar el envío del formulario
+    document.getElementById('sorteoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const nombre = document.getElementById('nombre').value;
+        const dni = document.getElementById('dni').value;
+        const celular = document.getElementById('celular').value;
+
+        // Validación de DNI
+        if (dni.length !== 3 || isNaN(dni)) {
+            alert("Por favor ingresa los últimos 3 dígitos válidos del DNI.");
+            return;
+        }
+
+        // URL del Google Apps Script (reemplaza con tu URL de Apps Script)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz_Nrp19ZC1T3nzeABUQtPLBqZwXjWRaePZj47jrnQPiaHhLNkH-7ZQfUSqKkZzeCxaAg/exec';
+
+        // Crear objeto de datos para enviar
+        const formData = new FormData();
+        formData.append('comercio', params.comercio || "No especificado");
+        formData.append('fecha', params.fecha || "No especificada");
+        formData.append('nombre', nombre);
+        formData.append('dni', dni);
+        formData.append('celular', celular);
+
+        // Enviar datos al Google Apps Script
+        fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => {
+                document.getElementById('mensaje').textContent = '¡Gracias por participar en el sorteo!';
+                document.getElementById('sorteoForm').reset(); // Limpiar el formulario
+            })
+            .catch(error => {
+                document.getElementById('mensaje').textContent = 'Error al enviar el formulario. Inténtalo nuevamente.';
+            });
+    });
+</script>
+
+</body>
+</html>
