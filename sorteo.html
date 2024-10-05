@@ -98,7 +98,7 @@
     // Obtener los parámetros de la URL y asignarlos a los elementos
     const params = getQueryParams();
     document.getElementById('comercio').textContent = `Comercio: ${params.comercio || "No especificado"}`;
-    document.getElementById('fecha').textContent = `Fecha: ${params.fecha || "No especificada"}`;
+    document.getElementById('fecha').textContent = `Fecha: ${params.fechaSorteo || "No especificada"}`;
 
     // Manejar el envío del formulario
     document.getElementById('sorteoForm').addEventListener('submit', function(event) {
