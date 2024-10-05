@@ -126,7 +126,7 @@
         formData.append('celular', celular);
 
         // Enviar datos al Google Apps Script
-        fetch(scriptURL, { method: 'POST', body: formData })
+        fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
             .then(response => {
                 document.getElementById('mensaje').textContent = '¡Gracias por participar en el sorteo!';
                 document.getElementById('sorteoForm').reset(); // Limpiar el formulario
